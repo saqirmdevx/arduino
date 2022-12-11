@@ -47,13 +47,11 @@ void loop(struct Game* game) {
     // Player 1 turn
     game->playerTurn = PLAYER_1_TURN;
     lcd_clear();
-    lcd_print_at(0, 0, "Player 1 turn");
-    playerTurn(game, &game->player1);
+    playerTurn(game, &game->player1, TEAM_RED);
     delay(500);
     game->playerTurn = PLAYER_2_TURN;
     lcd_clear();
-    lcd_print_at(0, 0, "Player 2 turn");
-    playerTurn(game, &game->player2);
+    playerTurn(game, &game->player2, TEAM_BLUE);
     delay(500);
 
     game->playerTurn = BLOCKED_TURN;
@@ -113,7 +111,11 @@ void addScoreToPlayer(struct Player* player) {
     player->score++;
 }
 
-void playerTurn(struct Game* game, struct Player* player) {
+void playerTurn(struct Game* game, struct Player* player, int team) {
+    bool isScoreDisplayed = false;
+    lcd_clear();
+    lcd_print_at(0, 0, team == TEAM_RED ? "-> Player Red" : "-> Player Blue");
+
     while (true) {
         if (game->playerTurn == BLOCKED_TURN) {
             break;
@@ -135,6 +137,16 @@ void playerTurn(struct Game* game, struct Player* player) {
         if (pressedButtons == 1) {
             player->choice = selectedPower;
             break;
+        }
+
+        if (pressedButtons > 1 && !isScoreDisplayed) {
+            isScoreDisplayed = true;
+            lcd_clear();
+            displayGameState();
+            delay(300)
+        } else if (pressedButtons < 2 && isScoreDisplayed) {
+            lcd_clear();
+            lcd_print_at(0, 0, team == TEAM_RED ? "-> Player Red" : "-> Player Blue");
         }
 
         // More buttons pressed or none

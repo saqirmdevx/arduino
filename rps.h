@@ -51,7 +51,7 @@ struct Game {
 
 void initializeGame();
 void loop(struct Game* game);
-void playerTurn(struct Game* game, struct Player* player);
+void playerTurn(struct Game* game, struct Player* player, int team);
 void onGameEnd(struct Game* game);
 bool isGameOver(struct Game* game);
 bool validateInput(struct Game* game);

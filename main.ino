@@ -14,8 +14,7 @@ void setup() {
 }
 
 void loop() {
-  // vykonáva sa opakovane
-
+    initializeGame();
 }
 
 void initializeLeds()

@@ -7,7 +7,7 @@
 #include <time.h>
 
 int redLeds[3] = {PLR_1_LED_1, PLR_1_LED_2, PLR_1_LED_3};
-int blueLeds[3] = {PLR_1_LED_1, PLR_1_LED_2, PLR_1_LED_3};
+int blueLeds[3] = {PLR_2_LED_1, PLR_2_LED_2, PLR_2_LED_3};
 int redButtons[3] = {PLR_1_ROCK_BTN, PLR_1_PAPER_BTN, PLR_1_SCISSOR_BTN};
 int blueButtons[3] = {PLR_2_ROCK_BTN, PLR_2_PAPER_BTN, PLR_2_SCISSOR_BTN};
 

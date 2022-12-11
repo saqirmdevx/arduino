@@ -4,7 +4,7 @@
 #include "lcd_wrapper.h"
 #include "string.h"
 
-LiquidCrystal_I2C lcd(0x27, 20, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void lcd_init()
 {
@@ -40,7 +40,9 @@ void lcd_print_at(int y, int x, char* text)
 void printTextInSequence(int y, int x, char* text, int time) {
     int length = strlen(text);
     for (int i = 0; i < length; i++) {
-        lcd_print_at(y, x + i, text[i]);
+        char str[2] = "";
+        sprintf(str, "%c", text[i]);
+        lcd_print_at(y, x + i, str);
         delay(time);
     }
 }

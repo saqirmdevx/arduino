@@ -31,8 +31,8 @@ void initializeGame() {
     turnOffLeds();
     lcd_clear();
     printTextInSequence(0, 0, "Welcome in game", 100);
-    printTextInSequence(0, 0, "Rock paper scissor", 100);
-    delay(1000);
+    printTextInSequence(1, 0, "RPS - 2 Player", 100);
+    delay(2000);
 
     while (!isGameOver(&game)) {
         loop(&game);
@@ -46,9 +46,13 @@ void loop(struct Game* game) {
     delay(3000);
     // Player 1 turn
     game->playerTurn = PLAYER_1_TURN;
+    lcd_clear();
+    lcd_print_at(0, 0, "Player 1 turn");
     playerTurn(game, &game->player1);
     delay(1000);
     game->playerTurn = PLAYER_2_TURN;
+    lcd_clear();
+    lcd_print_at(0, 0, "Player 2 turn");
     playerTurn(game, &game->player2);
 
     game->playerTurn = BLOCKED_TURN;
@@ -57,44 +61,44 @@ void loop(struct Game* game) {
     char* strPlr2 = stringifyChoice(game->player2.choice);
     lcd_clear();
     // Result
-    lcd_print_at(0, 0, "Red P");
+    lcd_print_at(0, 0, "Red");
     lcd_print_at(1, 0, strPlr1);
 
     // Player blue
-    lcd_print_at(0, 13, "Blue P");
-    lcd_print_at(1, 19 - strlen(strPlr2), strPlr2);
+    lcd_print_at(0, 12, "Blue");
+    lcd_print_at(1, 16 - strlen(strPlr2), strPlr2);
 
     // Get result
     if (game->player1.choice == game->player2.choice) {
-        lcd_print_at(1, 9, "==");
+        lcd_print_at(1, 7, "==");
         delay(1500);
         lcd_clear();
-        lcd_print_at(1,5, "DRAW");
+        lcd_print_at(1,6, "DRAW");
     } else {
         // Non-draw result
         if (game->player1.choice == ROCK && game->player2.choice == PAPER) {
             // plr 2 won
-            lcd_print_at(1, 9, "<");
+            lcd_print_at(1, 7, "<");
             addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == ROCK && game->player2.choice == SCISSOR) {
             // plr 1 won
-            lcd_print_at(1, 9, ">");
+            lcd_print_at(1, 7, ">");
             addScoreToPlayer(&game->player1);
         } else if (game->player1.choice == PAPER && game->player2.choice == ROCK) {
             // plr 1 won
-            lcd_print_at(1, 9, ">");
+            lcd_print_at(1, 7, ">");
             addScoreToPlayer(&game->player1);
         } else if (game->player1.choice == PAPER && game->player2.choice == SCISSOR) {
             // plr 2 won
-            lcd_print_at(1, 9, "<");
+            lcd_print_at(1, 7, "<");
             addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == SCISSOR && game->player2.choice == ROCK) {
             // plr 2 won
-            lcd_print_at(1, 9, "<");
+            lcd_print_at(1, 7, "<");
             addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == SCISSOR && game->player2.choice == PAPER) {
             // plr 1 won
-            lcd_print_at(1, 9, ">");
+            lcd_print_at(1, 7, ">");
             addScoreToPlayer(&game->player1);
         }
     }
@@ -140,17 +144,22 @@ void displayGameState(struct Game* game) {
     lcd_clear();
     char turns[3] = "";
     sprintf(turns, "%d", game->round);
+
+    char scoreP1[2] = "00";
+    char scoreP2[2] = "00";
+    scoreP1[1] = game->player1.score + '0';
+    scoreP2[1] = game->player2.score + '0';
     // Player blue
-    lcd_print_at(0, 0, "Red P");
-    lcd_print_at(1, 0, game->player1.score + '0');
+    lcd_print_at(0, 0, "Red");
+    lcd_print_at(1, 0, scoreP1);
 
     // Player blue
-    lcd_print_at(0, 13, "Blue P");
-    lcd_print_at(1, 18, game->player1.score + '0');
+    lcd_print_at(0, 12, "Blue");
+    lcd_print_at(1, 14, scoreP2);
 
     // Round
-    lcd_print_at(0, 9, "rnd");
-    lcd_print_at(1, 10, turns);
+    lcd_print_at(0, 6, "rnd");
+    lcd_print_at(1, 7, turns);
 }
 
 bool isGameOver(struct Game* game) {
@@ -182,8 +191,8 @@ void onGameEnd(struct Game* game) {
     turnOffLeds();
 
     lcd_print_at(1, 1, winner  == TEAM_RED ? 
-        "Red Player - Gratz!" :
-        "Blue Player - Gratz!"
+        "Red Player" :
+        "Blue Player"
     );
 
     if (winner == TEAM_RED) {
@@ -194,7 +203,8 @@ void onGameEnd(struct Game* game) {
 
     delay(1000);
     lcd_clear();
-    lcd_print_at(0, 0, "Restarting the game!");
+    lcd_print_at(0, 0, "Restarting ...");
+    delay(1000);
     free(&game->player1);
     free(&game->player2);
     free(game);

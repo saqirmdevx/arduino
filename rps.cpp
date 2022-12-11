@@ -18,7 +18,7 @@ Player initializePlayer(int team) {
 }
 
 void initializeGame() {
-    struct Game* game;
+    Game game;
     game.player1 = initializePlayer(1);
     game.player2 = initializePlayer(2);
     game.playerTurn = PLAYER_1_TURN;
@@ -37,14 +37,14 @@ void initializeGame() {
 }
 
 void loop(struct Game* game) {
-    displayGameState(&game);
+    displayGameState(game);
     delay(3000);
     // Player 1 turn
     game->playerTurn = PLAYER_1_TURN;
-    playerTurn(&game, &game->player1);
+    playerTurn(game, &game->player1);
     delay(1000);
     game->playerTurn = PLAYER_2_TURN;
-    playerTurn(&game, &game->player2);
+    playerTurn(game, &game->player2);
 
     game->playerTurn = BLOCKED_TURN;
     game->round++;
@@ -70,27 +70,27 @@ void loop(struct Game* game) {
         if (game->player1.choice == ROCK && game->player2.choice == PAPER) {
             // plr 2 won
             lcd_print_at(1, 9, "<");
-            addScoreToPlayer(&game->player2)
+            addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == ROCK && game->player2.choice == SCISSOR) {
             // plr 1 won
             lcd_print_at(1, 9, ">");
-            addScoreToPlayer(&game->player1)
+            addScoreToPlayer(&game->player1);
         } else if (game->player1.choice == PAPER && game->player2.choice == ROCK) {
             // plr 1 won
             lcd_print_at(1, 9, ">");
-            addScoreToPlayer(&game->player1)
+            addScoreToPlayer(&game->player1);
         } else if (game->player1.choice == PAPER && game->player2.choice == SCISSOR) {
             // plr 2 won
             lcd_print_at(1, 9, "<");
-            addScoreToPlayer(&game->player2)
+            addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == SCISSOR && game->player2.choice == ROCK) {
             // plr 2 won
             lcd_print_at(1, 9, "<");
-            addScoreToPlayer(&game->player2)
+            addScoreToPlayer(&game->player2);
         } else if (game->player1.choice == SCISSOR && game->player2.choice == PAPER) {
             // plr 1 won
             lcd_print_at(1, 9, ">");
-            addScoreToPlayer(&game->player1)
+            addScoreToPlayer(&game->player1);
         }
     }
     delay(2000);
@@ -111,7 +111,7 @@ void playerTurn(struct Game* game, struct Player* player) {
 
         int pressedButtons = 0;
         POWERS selectedPower = UNSELECTED;
-        for (let i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             if (digitalRead(player->buttons[i]) == HIGH) {
                 switch (i) {
                     case 0: selectedPower = ROCK; break;
@@ -150,7 +150,7 @@ void displayGameState(struct Game* game) {
 
 bool isGameOver(struct Game* game) {
     if (game->player1.score >= 3 || game->player2.score >= 3) {
-        return true
+        return true;
     }
     return false;
 }
@@ -168,7 +168,7 @@ int getWinner(struct Game* game) {
 
 void onGameEnd(struct Game* game) {
     lcd_clear();
-    int winner = getWinner(&game);
+    int winner = getWinner(game);
 
     printTextInSequence(0, 0, "Game Over!", 100);
     delay(1000);
@@ -190,8 +190,8 @@ void onGameEnd(struct Game* game) {
     delay(1000);
     lcd_clear();
     lcd_print_at(0, 0, "Restarting the game!");
-    free(game.player1);
-    free(game.player2);
+    free(&game->player1);
+    free(&game->player2);
     free(game);
     initializeGame();
 }
@@ -224,7 +224,7 @@ void playLedShow(int leds[3]) {
     turnOffLeds();
 }
 
-void stringifyChoice(POWERS choice) {
+void stringifyChoice(POWERS choice) {
     if (choice == ROCK) {
         return "Rock";
     } else if (choice == PAPER) {

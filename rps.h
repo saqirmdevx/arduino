@@ -42,8 +42,8 @@ struct Player {
     int team; //red / blue
     int score;
     POWERS choice = UNSELECTED;
-    int leds[3];
-    int buttons[3];
+    int* leds;
+    int* buttons;
 };
 
 struct Game {

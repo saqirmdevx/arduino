@@ -2,19 +2,23 @@
 #include "lcd_wrapper.h"
 #include <time.h>
 #include <stdlib.h>
+#include "string.h"
 
 //private functions
 void initializeLeds();
 void initializeButtons();
 
+int totalScore[2] = { 0, 0 };
+
 void setup() {
     lcd_init();
     initializeLeds();
     initializeButtons();
+    randomSeed(analogRead(A1));
 }
 
 void loop() {
-    initializeGame();
+    initializeGame(totalScore);
 }
 
 void initializeLeds()

@@ -22,7 +22,7 @@ Player initializePlayer(int team) {
     return player;
 }
 
-void initializeGame() {
+void initializeGame(int* totalScore) {
     Game game;
     game.player1 = initializePlayer(1);
     game.player2 = initializePlayer(2);
@@ -38,7 +38,9 @@ void initializeGame() {
         loop(&game);
     }
 
-    onGameEnd(&game);
+    displayGameState(game);
+    delay(3000);
+    onGameEnd(&game, totalScore);
 }
 
 void loop(struct Game* game) {
@@ -142,8 +144,8 @@ void playerTurn(struct Game* game, struct Player* player, int team) {
         if (pressedButtons > 1 && !isScoreDisplayed) {
             isScoreDisplayed = true;
             lcd_clear();
-            displayGameState();
-            delay(300)
+            displayGameState(game);
+            delay(300);
         } else if (pressedButtons < 2 && isScoreDisplayed) {
             lcd_clear();
             lcd_print_at(0, 0, team == TEAM_RED ? "-> Player Red" : "-> Player Blue");
@@ -193,7 +195,7 @@ int getWinner(struct Game* game) {
     return 0;
 }
 
-void onGameEnd(struct Game* game) {
+void onGameEnd(struct Game* game, int *totalScore) {
     lcd_clear();
     int winner = getWinner(game);
 
@@ -203,25 +205,34 @@ void onGameEnd(struct Game* game) {
     printTextInSequence(0, 0, "Winner Is: ", 100);
     turnOffLeds();
 
-    lcd_print_at(1, 1, winner  == TEAM_RED ? 
+    printTextInSequence(1, 1, winner  == TEAM_RED ? 
         "Red Player" :
-        "Blue Player"
+        "Blue Player", 100
     );
 
     if (winner == TEAM_RED) {
         playLedShow(redLeds);
+        totalScore[0]++;
     } else {
         playLedShow(blueLeds);
+        totalScore[1]++;
     }
 
-    delay(1000);
+    free(game);
+
+    lcd_clear();
+    char* redTeamScore = "Red sets: 0";
+    char* blueTeamScore = "Blue sets: 0";
+    redTeamScore[10] = totalScore[0] + '0';
+    blueTeamScore[11] = totalScore[1] + '0';
+
+    // Display total score
+    lcd_print_at(0, 0, redTeamScore);
+    lcd_print_at(1, 0, blueTeamScore);
+    delay(3000);
     lcd_clear();
     lcd_print_at(0, 0, "Restarting ...");
     delay(1000);
-    free(&game->player1);
-    free(&game->player2);
-    free(game);
-    initializeGame();
 }
 
 void turnOffLeds() {

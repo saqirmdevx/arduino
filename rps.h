@@ -49,10 +49,10 @@ struct Game {
 };
 
 
-void initializeGame();
+void initializeGame(int *totalScore);
 void loop(struct Game* game);
 void playerTurn(struct Game* game, struct Player* player, int team);
-void onGameEnd(struct Game* game);
+void onGameEnd(struct Game* game, int *totalScore);
 bool isGameOver(struct Game* game);
 bool validateInput(struct Game* game);
 Player initializePlayer(int team);

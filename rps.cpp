@@ -224,7 +224,7 @@ void playLedShow(int leds[3]) {
     turnOffLeds();
 }
 
-void stringifyChoice(POWERS choice) {
+char* stringifyChoice(POWERS choice) {
     if (choice == ROCK) {
         return "Rock";
     } else if (choice == PAPER) {

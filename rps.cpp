@@ -43,17 +43,18 @@ void initializeGame() {
 
 void loop(struct Game* game) {
     displayGameState(game);
-    delay(3000);
+    delay(4000);
     // Player 1 turn
     game->playerTurn = PLAYER_1_TURN;
     lcd_clear();
     lcd_print_at(0, 0, "Player 1 turn");
     playerTurn(game, &game->player1);
-    delay(1000);
+    delay(500);
     game->playerTurn = PLAYER_2_TURN;
     lcd_clear();
     lcd_print_at(0, 0, "Player 2 turn");
     playerTurn(game, &game->player2);
+    delay(500);
 
     game->playerTurn = BLOCKED_TURN;
     game->round++;
@@ -145,17 +146,17 @@ void displayGameState(struct Game* game) {
     char turns[3] = "";
     sprintf(turns, "%d", game->round);
 
-    char scoreP1[2] = "00";
-    char scoreP2[2] = "00";
-    scoreP1[1] = game->player1.score + '0';
-    scoreP2[1] = game->player2.score + '0';
+    char scoreP1[2] = "0";
+    char scoreP2[2] = "0";
+    scoreP1[0] = game->player1.score + '0';
+    scoreP2[0] = game->player2.score + '0';
     // Player blue
     lcd_print_at(0, 0, "Red");
     lcd_print_at(1, 0, scoreP1);
 
     // Player blue
     lcd_print_at(0, 12, "Blue");
-    lcd_print_at(1, 14, scoreP2);
+    lcd_print_at(1, 15, scoreP2);
 
     // Round
     lcd_print_at(0, 6, "rnd");
